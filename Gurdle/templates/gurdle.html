@@ -16,7 +16,14 @@
     <div class="container-fluid gurdle">
         <div class="row text-center logo-row pt-3 border-bottom">
             <h3>Gurdle</h3>
+            <p>The randomly selected word is: {{ RandomWord }}</p>
         </div>
+            <!-- <h1>List of Words</h1>
+    <ul>
+        {% for word in WORDS %}
+            <li>{{ word }}</li>
+        {% endfor %}
+    </ul> -->
         <div class="container my-3 text-center">
             <div class="row attempt-row" id="attempt-1">
                 <div class="col letter first">
