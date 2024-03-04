@@ -17,8 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from Gurdle import views
+from .utils import get_random_word_at_length
 
 urlpatterns = [
     path('', views.gurdle, name='gurdle'),
+    path('get_random_word_at_length/<int:length>/', views.generate_word_and_render, name='generate_word_and_render'),
     path('admin/', admin.site.urls),
 ]
