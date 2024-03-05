@@ -30,7 +30,8 @@ function fill_page_with_starting_buttons(){
     }
 }
 
-function create_keyboard(word){
+function create_keyboard(data){
+    var word = data.word;
     var row1 = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'];
     var row2 = ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'];
     var row3 = ['ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '<-'];
@@ -53,7 +54,7 @@ function create_keyboard(word){
                 letter_button.onclick = function() { enterLetter(rows[i][j], word.length); };
             }
             else if(rows[i][j] == 'ENTER' ){
-                letter_button.onclick = function() { checkWord(word); };
+                letter_button.onclick = function() { checkWord(data); };
             }
             else if(rows[i][j] == '<-' ){
                 letter_button.onclick = function() { removeLetter(word); };
@@ -88,7 +89,7 @@ function selectWordLength(length) {
                     row.appendChild(input);
                 }
             }
-            create_keyboard(data.word);
+            create_keyboard(data);
             localStorage.setItem("current-letter_slot-id", "letter-0-0");
             localStorage.setItem("current-entered-word", "");
         });
@@ -129,48 +130,63 @@ function removeLetter(word) {
     }
 }
 
-function checkWord(word) {
+function checkWord(data) {
+    var word = data.word;
     const currentLetterSlotId = localStorage.getItem("current-letter_slot-id");
     const currentEnteredWord = localStorage.getItem("current-entered-word");
     currentEnteredWordLow = currentEnteredWord.toLowerCase();
     let rowNum = currentLetterSlotId.substring(7,8);
     console.log(currentEnteredWordLow + " VS " + word);
-    if(currentEnteredWordLow.length == word.length){
-        for (let i = 0; i < word.length; i++) {
-            (function(i) {
-            setTimeout(function() {
-                let letterDiv = document.getElementById("letter-" + rowNum + "-" + i);
-                letterDiv.classList.add('animate__animated', 'animate__flipInX');
-                if(currentEnteredWordLow.charAt(i) == word.charAt(i)){
-                    letterDiv.style.backgroundColor = "#19a811";
-                }
-                else if(word.includes(currentEnteredWordLow.charAt(i).toString())){
-                    letterDiv.style.backgroundColor = "#c7c11c";
-                }
-                else{
-                    letterDiv.style.backgroundColor = "gray";
-                }
-                    }, i * 200);
-            })(i);
-        }
-        let rowNumInt = parseInt(rowNum);
-        rowNumInt += 1;
-        localStorage.setItem("current-letter_slot-id", "letter-" + rowNumInt + "-" + 0)
-        localStorage.setItem("current-entered-word", "");
+    if(isRealWord(currentEnteredWordLow, data.decoded_words)){
+        if(currentEnteredWordLow.length == word.length){
+            for (let i = 0; i < word.length; i++) {
+                (function(i) {
+                setTimeout(function() {
+                    let letterDiv = document.getElementById("letter-" + rowNum + "-" + i);
+                    letterDiv.classList.add('animate__animated', 'animate__flipInX');
+                    if(currentEnteredWordLow.charAt(i) == word.charAt(i)){
+                        letterDiv.style.backgroundColor = "#19a811";
+                    }
+                    else if(word.includes(currentEnteredWordLow.charAt(i).toString())){
+                        letterDiv.style.backgroundColor = "#c7c11c";
+                    }
+                    else{
+                        letterDiv.style.backgroundColor = "gray";
+                    }
+                        }, i * 200);
+                })(i);
+            }
+            let rowNumInt = parseInt(rowNum);
+            rowNumInt += 1;
+            localStorage.setItem("current-letter_slot-id", "letter-" + rowNumInt + "-" + 0)
+            localStorage.setItem("current-entered-word", "");
 
-        if(currentEnteredWordLow == word){
-            setTimeout(function() {
-                alert("Correct!");
-                window.location.href = ''; // If homepage URL is '/'
-            }, 300 * word.length);
-        }
-        if(rowNumInt > word.length || rowNumInt > 6){
-            setTimeout(function() {
-                alert("You Lose!");
-                window.location.href = ''; // If homepage URL is '/'
-            }, 300 * word.length);
+            if(currentEnteredWordLow == word){
+                setTimeout(function() {
+                    alert("Correct!");
+                    window.location.href = ''; // If homepage URL is '/'
+                }, 300 * word.length);
+            }
+            if(rowNumInt > word.length || rowNumInt > 6){
+                setTimeout(function() {
+                    alert("You Lose! The word was: " + word);
+                    window.location.href = ''; // If homepage URL is '/'
+                }, 300 * word.length);
+            }
         }
     }
+    else{
+        alert("Not a real word");
+    }
+}
+
+function isRealWord(word, word_list){
+    for (let i = 0; i < word_list.length; i++) {
+        if(word == word_list[i]){
+            return true;
+        }
+    }
+    return false;
 }
 
 function makeElementAppear(elementId){

@@ -14,3 +14,13 @@ def get_random_word_at_length(length):
         if len(word) == length:
             list_at_length.append(word)
     return random.choice(list_at_length)
+
+def get_decoded_words():
+    return decoded_words
+
+# def isRealWord(targ_word):
+#     for word in decoded_words:
+#         if targ_word == word:
+#             return True
+        
+#     return False
