@@ -30,7 +30,7 @@ function fill_page_with_starting_buttons(){
     }
 }
 
-function create_keyboard(){
+function create_keyboard(word){
     var row1 = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'];
     var row2 = ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'];
     var row3 = ['ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '<-'];
@@ -48,10 +48,19 @@ function create_keyboard(){
             var letter_button = document.createElement("button");
             letter_button.className = "btn keyboard-btns col btn-secondary m-1";
             letter_button.textContent = rows[i][j];
+            letter_button.id = rows[i][j];
+            if(rows[i][j] != 'ENTER' && rows[i][j] != '<-') {
+                letter_button.onclick = function() { enterLetter(rows[i][j], word.length); };
+            }
+            else if(rows[i][j] == 'ENTER' ){
+                letter_button.onclick = function() { checkWord(word); };
+            }
+            else if(rows[i][j] == '<-' ){
+                letter_button.onclick = function() { removeLetter(word); };
+            }
             row.appendChild(letter_button);
         }
     }
-
     container.appendChild(keyboard_container);
 }
 
@@ -79,8 +88,89 @@ function selectWordLength(length) {
                     row.appendChild(input);
                 }
             }
-            create_keyboard();
+            create_keyboard(data.word);
+            localStorage.setItem("current-letter_slot-id", "letter-0-0");
+            localStorage.setItem("current-entered-word", "");
         });
+}
+
+function enterLetter(letter, word_length){
+    const currentLetterSlotId = localStorage.getItem("current-letter_slot-id");
+    const currentEnteredWord = localStorage.getItem("current-entered-word");
+    let letter_slot = currentLetterSlotId.substring(9);
+    let int_letter_slot = parseInt(letter_slot);
+    if(int_letter_slot < word_length){
+        document.getElementById(currentLetterSlotId).textContent = letter;
+        localStorage.setItem("current-entered-word", currentEnteredWord + letter);
+        //Logic for pointer
+        if(int_letter_slot < word_length){
+            int_letter_slot += 1;
+            localStorage.setItem("current-letter_slot-id", currentLetterSlotId.substring(0, 9) + int_letter_slot);
+        }
+    }
+    console.log(localStorage.getItem("current-letter_slot-id"));
+}
+
+function removeLetter(word) {
+    const currentLetterSlotId = localStorage.getItem("current-letter_slot-id");
+    const currentEnteredWord = localStorage.getItem("current-entered-word");
+    console.log("Trying to remove at id:" + currentLetterSlotId);
+    console.log(currentLetterSlotId);
+    let letter_slot = currentLetterSlotId.substring(9);
+    let int_letter_slot = parseInt(letter_slot);
+    if(int_letter_slot > -1){
+        //Logic for pointer
+        if(int_letter_slot != 0){
+            int_letter_slot -= 1;
+            localStorage.setItem("current-letter_slot-id", currentLetterSlotId.substring(0, 9) + int_letter_slot);
+        }
+        document.getElementById(localStorage.getItem("current-letter_slot-id")).textContent = "";
+        localStorage.setItem("current-entered-word", currentEnteredWord.substring(0, currentEnteredWord.length-1));
+    }
+}
+
+function checkWord(word) {
+    const currentLetterSlotId = localStorage.getItem("current-letter_slot-id");
+    const currentEnteredWord = localStorage.getItem("current-entered-word");
+    currentEnteredWordLow = currentEnteredWord.toLowerCase();
+    let rowNum = currentLetterSlotId.substring(7,8);
+    console.log(currentEnteredWordLow + " VS " + word);
+    if(currentEnteredWordLow.length == word.length){
+        for (let i = 0; i < word.length; i++) {
+            (function(i) {
+            setTimeout(function() {
+                let letterDiv = document.getElementById("letter-" + rowNum + "-" + i);
+                letterDiv.classList.add('animate__animated', 'animate__flipInX');
+                if(currentEnteredWordLow.charAt(i) == word.charAt(i)){
+                    letterDiv.style.backgroundColor = "#19a811";
+                }
+                else if(word.includes(currentEnteredWordLow.charAt(i).toString())){
+                    letterDiv.style.backgroundColor = "#c7c11c";
+                }
+                else{
+                    letterDiv.style.backgroundColor = "gray";
+                }
+                    }, i * 200);
+            })(i);
+        }
+        let rowNumInt = parseInt(rowNum);
+        rowNumInt += 1;
+        localStorage.setItem("current-letter_slot-id", "letter-" + rowNumInt + "-" + 0)
+        localStorage.setItem("current-entered-word", "");
+
+        if(currentEnteredWordLow == word){
+            setTimeout(function() {
+                alert("Correct!");
+                window.location.href = ''; // If homepage URL is '/'
+            }, 300 * word.length);
+        }
+        if(rowNumInt > word.length || rowNumInt > 6){
+            setTimeout(function() {
+                alert("You Lose!");
+                window.location.href = ''; // If homepage URL is '/'
+            }, 300 * word.length);
+        }
+    }
 }
 
 function makeElementAppear(elementId){
