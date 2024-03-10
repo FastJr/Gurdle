@@ -131,6 +131,7 @@ function removeLetter(word) {
 }
 
 function checkWord(data) {
+    //NOTE: Alter word checker to delete characters from target word each time its letter is entered for the duration of the for loop
     var word = data.word;
     const currentLetterSlotId = localStorage.getItem("current-letter_slot-id");
     const currentEnteredWord = localStorage.getItem("current-entered-word");
