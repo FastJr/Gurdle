@@ -136,6 +136,7 @@ function checkWord(data) {
     const currentLetterSlotId = localStorage.getItem("current-letter_slot-id");
     const currentEnteredWord = localStorage.getItem("current-entered-word");
     currentEnteredWordLow = currentEnteredWord.toLowerCase();
+    var lettersLogged = [];
     let rowNum = currentLetterSlotId.substring(7,8);
     console.log(currentEnteredWordLow + " VS " + word);
     if(isRealWord(currentEnteredWordLow, data.decoded_words)){
@@ -146,17 +147,26 @@ function checkWord(data) {
                     let letterDiv = document.getElementById("letter-" + rowNum + "-" + i);
                     letterDiv.classList.add('animate__animated', 'animate__flipInX');
                     if(currentEnteredWordLow.charAt(i) == word.charAt(i)){
+                        lettersLogged.push(currentEnteredWordLow.charAt(i));
                         letterDiv.style.backgroundColor = "#19a811";
+                        document.getElementById(currentEnteredWordLow.charAt(i).toUpperCase()).style.backgroundColor = "#19a811";
                     }
-                    else if(word.includes(currentEnteredWordLow.charAt(i).toString())){
+                    else if(!lettersLogged.includes(currentEnteredWordLow.charAt(i)) && word.includes(currentEnteredWordLow.charAt(i).toString())){
+                        lettersLogged.push(currentEnteredWordLow.charAt(i));
+                        console.log(lettersLogged);
                         letterDiv.style.backgroundColor = "#c7c11c";
+                        if(document.getElementById(currentEnteredWordLow.charAt(i).toUpperCase()).style.backgroundColor != "#19a811")
+                            document.getElementById(currentEnteredWordLow.charAt(i).toUpperCase()).style.backgroundColor = "#c7c11c";
                     }
                     else{
                         letterDiv.style.backgroundColor = "gray";
+                        if(document.getElementById(currentEnteredWordLow.charAt(i).toUpperCase()).style.backgroundColor != "#c7c11c" && document.getElementById(currentEnteredWordLow.charAt(i).toUpperCase()).style.backgroundColor != "#19a811")
+                            document.getElementById(currentEnteredWordLow.charAt(i).toUpperCase()).style.backgroundColor = "#42464a";
                     }
                         }, i * 200);
                 })(i);
             }
+            lettersLogged = [];
             let rowNumInt = parseInt(rowNum);
             rowNumInt += 1;
             localStorage.setItem("current-letter_slot-id", "letter-" + rowNumInt + "-" + 0)
