@@ -164,7 +164,7 @@ function checkWord(data) {
                         letterDiv.style.backgroundColor = "#19a811";
                         document.getElementById(currentEnteredWordLow.charAt(i).toUpperCase()).style.backgroundColor = "#19a811";
                         for (let j = 0; j < word.substring(0, i).length; j++) {
-                            if(currentEnteredWordLow.charAt(i) == currentEnteredWordLow.charAt(j)){
+                            if(currentEnteredWordLow.charAt(i) == currentEnteredWordLow.charAt(j) && document.getElementById("letter-" + rowNum + "-" + j).style.backgroundColor != "rgb(25, 168, 17)"){
                                 document.getElementById("letter-" + rowNum + "-" + j).style.backgroundColor = "gray";
                             }
                         }
