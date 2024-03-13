@@ -163,6 +163,11 @@ function checkWord(data) {
                         lettersLogged.push(currentEnteredWordLow.charAt(i));
                         letterDiv.style.backgroundColor = "#19a811";
                         document.getElementById(currentEnteredWordLow.charAt(i).toUpperCase()).style.backgroundColor = "#19a811";
+                        for (let j = 0; j < word.substring(0, i).length; j++) {
+                            if(currentEnteredWordLow.charAt(i) == currentEnteredWordLow.charAt(j)){
+                                document.getElementById("letter-" + rowNum + "-" + j).style.backgroundColor = "gray";
+                            }
+                        }
                     }
                     else if(!lettersLogged.includes(currentEnteredWordLow.charAt(i)) && word.includes(currentEnteredWordLow.charAt(i).toString())){
                         lettersLogged.push(currentEnteredWordLow.charAt(i));
@@ -173,8 +178,10 @@ function checkWord(data) {
                     }
                     else{
                         letterDiv.style.backgroundColor = "gray";
-                        if(document.getElementById(currentEnteredWordLow.charAt(i).toUpperCase()).style.backgroundColor != "#c7c11c" && document.getElementById(currentEnteredWordLow.charAt(i).toUpperCase()).style.backgroundColor != "#19a811")
+                        if(document.getElementById(currentEnteredWordLow.charAt(i).toUpperCase()).style.backgroundColor != "rgb(199, 193, 28)" && document.getElementById(currentEnteredWordLow.charAt(i).toUpperCase()).style.backgroundColor != "rgb(25, 168, 17)"){
+                            console.log(document.getElementById(currentEnteredWordLow.charAt(i).toUpperCase()).style.backgroundColor);
                             document.getElementById(currentEnteredWordLow.charAt(i).toUpperCase()).style.backgroundColor = "#42464a";
+                        }
                     }
                         }, i * 200);
                 })(i);
