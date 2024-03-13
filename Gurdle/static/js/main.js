@@ -62,6 +62,19 @@ function create_keyboard(data){
             row.appendChild(letter_button);
         }
     }
+    window.addEventListener('keydown', function(event) {
+        const isLetter = (event.key >= 'a' && event.key <= 'z');
+        console.log(event.key);
+        if(isLetter){
+            enterLetter(event.key.toUpperCase(), word.length);
+        }
+        else if(event.key == "Backspace"){
+            removeLetter(word);
+        }
+        else if(event.key == "Enter"){
+            checkWord(data);
+        }
+    });
     container.appendChild(keyboard_container);
 }
 
