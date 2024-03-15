@@ -30,6 +30,8 @@ body {
     box-sizing: border-box;
     border-style: solid;
     border-width: thin;
+    font-weight: bolder;
+    font-size: larger;
     border-color: gray;
 }
 

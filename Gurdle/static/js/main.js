@@ -97,7 +97,7 @@ function selectWordLength(length) {
                     const input = document.createElement('div');
                     input.type = 'text';
                     input.maxLength = 1;
-                    input.className = "letter"
+                    input.className = "letter pt-3"
                     input.id = `letter-${j}-${i}`;
                     row.appendChild(input);
                 }
@@ -198,7 +198,7 @@ function checkWord(data) {
                     window.location.href = ''; // If homepage URL is '/'
                 }, 300 * word.length);
             }
-            if(rowNumInt > word.length || rowNumInt > 6){
+            else if(rowNumInt > word.length || rowNumInt > 6){
                 setTimeout(function() {
                     alert("You Lose! The word was: " + word);
                     window.location.href = ''; // If homepage URL is '/'
